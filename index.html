@@ -659,7 +659,18 @@
         }
         .contact-grid {
             display:grid; grid-template-columns:1fr 1fr; gap:6rem;
-            align-items:center; position:relative; z-index:1;
+            align-items:start; position:relative; z-index:1;
+        }
+        .contact-cal {
+            margin-top: 3rem;
+        }
+        .contact-cal-label {
+            font-size:0.62rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+            color:var(--gray); margin-bottom:1rem;
+        }
+        .contact-cal iframe {
+            width:100%; height:500px; border:1px solid var(--border);
+            border-radius:16px; background:var(--black-3);
         }
         .contact-heading {
             font-size:clamp(2.5rem,4vw,3.8rem); font-weight:900;
@@ -1389,6 +1400,10 @@
             <a href="mailto:moovii.films@gmail.com" class="contact-cta">
                 Démarrer un projet →
             </a>
+            <div class="contact-cal">
+                <div class="contact-cal-label">📅 Prendre rendez-vous</div>
+                <iframe src="https://cal.com/fabsduchesnay" frameborder="0"></iframe>
+            </div>
         </div>
     </div>
 </section>
