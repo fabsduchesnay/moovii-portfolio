@@ -669,6 +669,37 @@
         }
         .contact-cta:hover { background:var(--orange-2); transform:translateY(-3px); box-shadow:0 20px 50px rgba(255,106,0,0.3); }
 
+        /* ── LIGHTBOX ── */
+        #lightbox {
+            display:none; position:fixed; inset:0; z-index:9000;
+            background:rgba(0,0,0,0.92); backdrop-filter:blur(12px);
+            align-items:center; justify-content:center;
+        }
+        #lightbox.open { display:flex; }
+        #lightbox img {
+            max-height:90vh; max-width:85vw;
+            border-radius:16px; object-fit:contain;
+            box-shadow:0 40px 100px rgba(0,0,0,0.8);
+        }
+        .lb-close {
+            position:absolute; top:1.5rem; right:2rem;
+            font-size:2rem; color:rgba(255,255,255,0.5); cursor:pointer;
+            line-height:1; transition:color 0.2s;
+        }
+        .lb-close:hover { color:#fff; }
+        .lb-arrow {
+            position:absolute; top:50%; transform:translateY(-50%);
+            font-size:2rem; color:rgba(255,255,255,0.4); cursor:pointer;
+            padding:1rem; transition:color 0.2s; user-select:none;
+        }
+        .lb-arrow:hover { color:#fff; }
+        .lb-prev { left:1.5rem; }
+        .lb-next { right:1.5rem; }
+        .lb-counter {
+            position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+            font-size:0.72rem; color:rgba(255,255,255,0.35); letter-spacing:0.15em;
+        }
+
         /* ── FOOTER ── */
         footer {
             padding:1.8rem 5rem; border-top:1px solid var(--border);
@@ -1161,11 +1192,9 @@
         </div>
 
         <!-- Card G — IA : Bloom -->
-        <div class="proj-card proj-card-g ia-project fade-up d1">
+        <div class="proj-card proj-card-g ia-project fade-up d1" onclick="openLightbox(0)" style="cursor:pointer;">
             <div class="proj-inner">
-                <div class="proj-bg pb-7"></div>
-                <div class="deco-glow" style="top:20%;left:30%;width:120px;height:120px;background:rgba(140,80,220,0.3);"></div>
-                <div class="deco-glow" style="bottom:25%;right:15%;width:70px;height:70px;background:rgba(180,100,255,0.2);"></div>
+                <div class="proj-bg" style="background-image:url('bloom-1.png'); background-size:cover; background-position:center;"></div>
                 <div class="proj-gradient"></div>
                 <div class="proj-overlay"></div>
                 <div class="proj-info">
@@ -1340,6 +1369,15 @@
     </div>
 </section>
 
+<!-- ── LIGHTBOX ── -->
+<div id="lightbox">
+    <span class="lb-close" onclick="closeLightbox()">✕</span>
+    <span class="lb-arrow lb-prev" onclick="lbNav(-1)">‹</span>
+    <img id="lb-img" src="" alt="">
+    <span class="lb-arrow lb-next" onclick="lbNav(1)">›</span>
+    <div class="lb-counter" id="lb-counter"></div>
+</div>
+
 <!-- ── FOOTER ── -->
 <footer>
     <div class="footer-logo"><img src="moovii-logo.png" alt="MOOVII"></div>
@@ -1411,6 +1449,33 @@
         }, { threshold: 0.5 });
         bioObs.observe(bioNum);
     }
+
+    // ── Lightbox Bloom
+    const bloomPhotos = ['bloom-1.png','bloom-2.png','bloom-3.png','bloom-4.png','bloom-5.png'];
+    let lbIndex = 0;
+    function openLightbox(i) {
+        lbIndex = i;
+        document.getElementById('lb-img').src = bloomPhotos[lbIndex];
+        document.getElementById('lb-counter').textContent = (lbIndex+1) + ' / ' + bloomPhotos.length;
+        document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('open');
+    }
+    function lbNav(dir) {
+        lbIndex = (lbIndex + dir + bloomPhotos.length) % bloomPhotos.length;
+        document.getElementById('lb-img').src = bloomPhotos[lbIndex];
+        document.getElementById('lb-counter').textContent = (lbIndex+1) + ' / ' + bloomPhotos.length;
+    }
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) closeLightbox();
+    });
+    document.addEventListener('keydown', e => {
+        if (!document.getElementById('lightbox').classList.contains('open')) return;
+        if (e.key === 'ArrowRight') lbNav(1);
+        if (e.key === 'ArrowLeft') lbNav(-1);
+        if (e.key === 'Escape') closeLightbox();
+    });
 
     // ── 3D tilt on project cards
     document.querySelectorAll('.proj-card').forEach(card => {
