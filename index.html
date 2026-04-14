@@ -1172,11 +1172,9 @@
         </div>
 
         <!-- Card F — IA : Raffinata -->
-        <div class="proj-card proj-card-f ia-project fade-up">
+        <div class="proj-card proj-card-f ia-project fade-up" onclick="openLightboxRaffinata(0)" style="cursor:pointer;">
             <div class="proj-inner">
-                <div class="proj-bg pb-6"></div>
-                <div class="deco-glow" style="top:15%;right:20%;width:100px;height:100px;background:rgba(200,60,80,0.35);"></div>
-                <div class="deco-glow" style="bottom:30%;left:10%;width:60px;height:60px;background:rgba(255,100,100,0.2);"></div>
+                <div class="proj-bg" style="background-image:url('short1.jpg'); background-size:cover; background-position:center top;"></div>
                 <div class="proj-gradient"></div>
                 <div class="proj-overlay"></div>
                 <div class="proj-info">
@@ -1449,6 +1447,17 @@
         bioObs.observe(bioNum);
     }
 
+    // ── Lightbox Raffinata
+    const raffinataPhotos = ['short1.jpg','short2.jpg','short3.jpg','short4.jpg','short5.jpg','short6.jpg'];
+    let lbIndexR = 0;
+    function openLightboxRaffinata(i) {
+        lbIndexR = i;
+        document.getElementById('lb-img').src = raffinataPhotos[lbIndexR];
+        document.getElementById('lb-counter').textContent = (lbIndexR+1) + ' / ' + raffinataPhotos.length;
+        document.getElementById('lightbox').dataset.gallery = 'raffinata';
+        document.getElementById('lightbox').classList.add('open');
+    }
+
     // ── Lightbox Bloom
     const bloomPhotos = ['bloom-1.png','bloom-2.png','bloom-3.png','bloom-4.png','bloom-5.png'];
     let lbIndex = 0;
@@ -1456,15 +1465,23 @@
         lbIndex = i;
         document.getElementById('lb-img').src = bloomPhotos[lbIndex];
         document.getElementById('lb-counter').textContent = (lbIndex+1) + ' / ' + bloomPhotos.length;
+        document.getElementById('lightbox').dataset.gallery = 'bloom';
         document.getElementById('lightbox').classList.add('open');
     }
     function closeLightbox() {
         document.getElementById('lightbox').classList.remove('open');
     }
     function lbNav(dir) {
-        lbIndex = (lbIndex + dir + bloomPhotos.length) % bloomPhotos.length;
-        document.getElementById('lb-img').src = bloomPhotos[lbIndex];
-        document.getElementById('lb-counter').textContent = (lbIndex+1) + ' / ' + bloomPhotos.length;
+        const gallery = document.getElementById('lightbox').dataset.gallery;
+        if (gallery === 'raffinata') {
+            lbIndexR = (lbIndexR + dir + raffinataPhotos.length) % raffinataPhotos.length;
+            document.getElementById('lb-img').src = raffinataPhotos[lbIndexR];
+            document.getElementById('lb-counter').textContent = (lbIndexR+1) + ' / ' + raffinataPhotos.length;
+        } else {
+            lbIndex = (lbIndex + dir + bloomPhotos.length) % bloomPhotos.length;
+            document.getElementById('lb-img').src = bloomPhotos[lbIndex];
+            document.getElementById('lb-counter').textContent = (lbIndex+1) + ' / ' + bloomPhotos.length;
+        }
     }
     document.getElementById('lightbox').addEventListener('click', function(e) {
         if (e.target === this) closeLightbox();
