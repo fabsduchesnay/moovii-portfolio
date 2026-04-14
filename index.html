@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOOVII — Studio Vidéo & Studio IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #FF6A00;
+            --orange-2: #FF8C42;
+            --orange-dim: rgba(255, 106, 0, 0.1);
+            --ia-color: #FFB020;
+            --ia-dim: rgba(255, 176, 32, 0.1);
+            --black: #0B0B0B;
+            --black-2: #111111;
+            --black-3: #181818;
+            --black-4: #1F1F1F;
+            --white: #FFFFFF;
+            --gray: #707070;
+            --gray-2: #B0B0B0;
+            --border: rgba(255,255,255,0.07);
+            --border-o: rgba(255,106,0,0.3);
+            --border-ia: rgba(255,176,32,0.3);
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            position: fixed; top:0; left:0; right:0; z-index:1000;
+            padding: 0 5rem;
+            height: 72px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(11,11,11,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo img { height: 30px; width: auto; display:block; filter: invert(1); }
+        footer .footer-logo img { filter: invert(1); }
+        .nav-links { display:flex; align-items:center; gap:2.5rem; list-style:none; }
+        .nav-links a {
+            color: var(--gray-2); text-decoration:none;
+            font-size: 0.8rem; font-weight:400; letter-spacing:0.05em;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--white); }
+        .nav-sep { width:1px; height:20px; background:var(--border); }
+        .nav-studio-v { color: var(--orange) !important; font-weight:600 !important; }
+        .nav-studio-ia { color: var(--ia-color) !important; font-weight:600 !important; }
+        .nav-cta {
+            background: var(--orange); color: var(--black) !important;
+            padding: 0.5rem 1.3rem; border-radius:100px;
+            font-weight:700 !important; font-size:0.77rem !important;
+            transition: all 0.3s !important;
+        }
+        .nav-cta:hover { background: var(--orange-2) !important; box-shadow: 0 0 25px rgba(255,106,0,0.4) !important; }
+
+        /* ── UTILS ── */
+        .eyebrow {
+            display: inline-flex; align-items:center; gap:0.7rem;
+            font-size:0.65rem; font-weight:700; letter-spacing:0.22em; text-transform:uppercase;
+            margin-bottom: 1.2rem;
+        }
+        .eyebrow::before { content:''; width:28px; height:1px; background:currentColor; opacity:0.6; }
+        .eyebrow.orange { color: var(--orange); }
+        .eyebrow.ia { color: var(--ia-color); }
+        .eyebrow.white { color: var(--gray-2); }
+        .section-title {
+            font-size: clamp(2.2rem, 3.8vw, 4rem);
+            font-weight:800; line-height:1.05; letter-spacing:-0.025em;
+        }
+        .dot-o { color: var(--orange); }
+        .dot-ia { color: var(--ia-color); }
+        section { padding: 8rem 5rem; position:relative; }
+        .fade-up { opacity:0; transform:translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .fade-up.visible { opacity:1; transform:translateY(0); }
+        .d1 { transition-delay:0.1s; } .d2 { transition-delay:0.2s; }
+        .d3 { transition-delay:0.3s; } .d4 { transition-delay:0.4s; }
+
+        /* Studio pills */
+        .studio-pill {
+            display: inline-flex; align-items:center; gap:0.5rem;
+            padding: 0.4rem 1rem; border-radius:100px;
+            font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+        }
+        .studio-pill.video {
+            background: var(--orange-dim); border:1px solid var(--border-o); color:var(--orange);
+        }
+        .studio-pill.ia {
+            background: var(--ia-dim); border:1px solid var(--border-ia); color:var(--ia-color);
+        }
+        .pill-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+        /* ── SECTION 1 — HERO ── */
+        #hero {
+            min-height: 100vh;
+            padding: 9rem 5rem 5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr auto;
+            gap: 0;
+            align-items: center;
+            position:relative; overflow:hidden;
+        }
+        .hero-glow-1 {
+            position:absolute; top:-10%; right:-5%; width:60vw; height:60vw;
+            background: radial-gradient(circle, rgba(255,106,0,0.11) 0%, transparent 65%);
+            filter:blur(60px); pointer-events:none; border-radius:50%;
+        }
+        .hero-glow-2 {
+            position:absolute; bottom:-15%; left:-5%; width:40vw; height:40vw;
+            background: radial-gradient(circle, rgba(255,176,32,0.07) 0%, transparent 70%);
+            filter:blur(60px); pointer-events:none; border-radius:50%;
+        }
+        .hero-left-col {
+            grid-column: 1;
+            grid-row: 1;
+            display: flex; flex-direction:column; justify-content:center;
+            position:relative; z-index:2;
+            padding-right: 2rem;
+        }
+        .hero-right-col {
+            grid-column: 2;
+            grid-row: 1;
+            position:relative;
+            height: 100vh;
+            display:flex; align-items:center; justify-content:center;
+        }
+        /* Photo incrustée — fondue dans le noir */
+        .hero-photo-wrap {
+            position:absolute;
+            inset: 0;
+            overflow:hidden;
+        }
+        .hero-photo-wrap img {
+            width:100%; height:100%;
+            object-fit: cover;
+            object-position: center top;
+            display:block;
+            filter: brightness(0.8) contrast(1.08) saturate(0.9);
+            mask-image:
+                linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
+                linear-gradient(to bottom, transparent 0%, black 12%, black 80%, transparent 100%),
+                radial-gradient(ellipse 80% 90% at 50% 45%, black 30%, transparent 100%);
+            mask-composite: intersect;
+            -webkit-mask-image:
+                linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
+                linear-gradient(to bottom, transparent 0%, black 12%, black 80%, transparent 100%),
+                radial-gradient(ellipse 80% 90% at 50% 45%, black 30%, transparent 100%);
+            -webkit-mask-composite: source-in;
+        }
+        /* Halo orange derrière le sujet */
+        .hero-photo-glow {
+            position:absolute;
+            top: 30%; left: 50%; transform: translate(-50%, -50%);
+            width: 55%; height: 55%;
+            background: radial-gradient(circle, rgba(255,106,0,0.2) 0%, transparent 70%);
+            filter: blur(50px);
+            pointer-events:none; z-index:1;
+        }
+        .hero-studios {
+            display: flex; gap:0.75rem; margin-bottom:2.5rem;
+        }
+        .hero-headline {
+            font-size: clamp(2.4rem, 4.2vw, 5rem);
+            font-weight:900; line-height:1.0; letter-spacing:-0.03em;
+            max-width: 680px;
+            margin-bottom: 2rem;
+        }
+        .hero-headline .grad {
+            background: linear-gradient(120deg, #FF6A00 0%, #FF9040 60%, #FFB870 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+        }
+        .hero-argument {
+            max-width: 520px;
+            background: var(--black-3); border:1px solid var(--border);
+            border-left: 3px solid var(--orange);
+            border-radius: 0 16px 16px 0;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+        .hero-argument p {
+            font-size:0.9rem; color:var(--gray-2); line-height:1.85; font-weight:300;
+        }
+        .hero-argument strong { color:var(--white); font-weight:500; }
+        .hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; }
+        .btn-primary {
+            display:inline-flex; align-items:center; gap:0.7rem;
+            background:var(--orange); color:var(--black);
+            padding:0.85rem 1.8rem; border-radius:100px;
+            font-size:0.85rem; font-weight:700; letter-spacing:0.03em;
+            text-decoration:none; transition:all 0.3s;
+        }
+        .btn-primary:hover { background:var(--orange-2); transform:translateY(-3px); box-shadow:0 20px 50px rgba(255,106,0,0.3); }
+        .btn-secondary {
+            display:inline-flex; align-items:center; gap:0.7rem;
+            background:var(--ia-dim); border:1px solid var(--border-ia); color:var(--ia-color);
+            padding:0.85rem 1.8rem; border-radius:100px;
+            font-size:0.85rem; font-weight:700; letter-spacing:0.03em;
+            text-decoration:none; transition:all 0.3s;
+        }
+        .btn-secondary:hover { background:rgba(255,176,32,0.15); transform:translateY(-3px); }
+        .btn-outline {
+            display:inline-flex; align-items:center; gap:0.7rem;
+            background:transparent; border:1px solid var(--border); color:var(--gray-2);
+            padding:0.85rem 1.8rem; border-radius:100px;
+            font-size:0.85rem; font-weight:500; letter-spacing:0.03em;
+            text-decoration:none; transition:all 0.3s;
+        }
+        .btn-outline:hover { border-color:var(--gray-2); color:var(--white); }
+        /* Scroll cue */
+        .scroll-cue {
+            position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
+            display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+            color:var(--gray); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase;
+        }
+        .scroll-line {
+            width:1px; height:44px;
+            background:linear-gradient(180deg, var(--orange) 0%, transparent 100%);
+            animation: scroll-drop 2s ease-in-out infinite;
+        }
+        @keyframes scroll-drop {
+            0%   { transform:scaleY(0); transform-origin:top; opacity:0; }
+            40%  { transform:scaleY(1); transform-origin:top; opacity:1; }
+            60%  { transform:scaleY(1); transform-origin:bottom; opacity:1; }
+            100% { transform:scaleY(0); transform-origin:bottom; opacity:0; }
+        }
+
+        /* ── SECTION 2 — MANIFESTE ── */
+        #manifeste {
+            background: var(--black);
+            padding: 8rem 5rem;
+        }
+        #manifeste::before {
+            content:''; position:absolute; top:0; left:5%; right:5%;
+            height:1px; background:linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+        .manifeste-inner {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 6rem;
+            align-items: start;
+            margin-top: 4rem;
+        }
+        .manifeste-left {}
+        .manifeste-summary {
+            font-size: 0.82rem; font-weight:300; color:var(--gray);
+            line-height:1.9; letter-spacing:0.01em;
+            position: sticky; top: 100px;
+        }
+        .manifeste-right {
+            display: flex; flex-direction:column; gap: 0;
+        }
+        .manifeste-stmt {
+            display: grid;
+            grid-template-columns: 28px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .manifeste-stmt:first-child { border-top: 1px solid var(--border); }
+        .stmt-index {
+            font-size: 0.6rem; font-weight:700; color:var(--gray);
+            letter-spacing: 0.1em; padding-top: 0.35rem;
+        }
+        .stmt-text {
+            font-size: clamp(1rem, 1.6vw, 1.25rem);
+            font-weight: 400; color: var(--gray-2);
+            line-height: 1.6; letter-spacing: -0.01em;
+        }
+        .stmt-text strong { color: var(--white); font-weight:600; }
+        .stmt-text .pill-v {
+            display:inline-flex; align-items:center; gap:0.35rem;
+            background:var(--orange-dim); border:1px solid var(--border-o);
+            color:var(--orange); padding:0.1rem 0.7rem; border-radius:100px;
+            font-size:0.7em; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+            vertical-align:middle;
+        }
+        .stmt-text .pill-ia {
+            display:inline-flex; align-items:center; gap:0.35rem;
+            background:var(--ia-dim); border:1px solid var(--border-ia);
+            color:var(--ia-color); padding:0.1rem 0.7rem; border-radius:100px;
+            font-size:0.7em; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+            vertical-align:middle;
+        }
+        .manifeste-stmt.is-final .stmt-text {
+            font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+            font-weight:600; color:var(--white);
+        }
+
+        /* ── SECTION 3 — PROCESS ── */
+        #process { background: var(--black); }
+        .process-intro {
+            display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:end;
+            margin-bottom:5rem;
+        }
+        .process-desc { font-size:0.92rem; color:var(--gray); line-height:1.85; align-self:end; }
+
+        .process-grid {
+            display:grid; grid-template-columns:1fr 1fr; gap:2rem;
+        }
+        .process-col {
+            background:var(--black-3); border:1px solid var(--border);
+            border-radius:24px; overflow:hidden;
+        }
+        .process-col-header {
+            padding: 2rem 2.5rem;
+            border-bottom:1px solid var(--border);
+            display:flex; align-items:center; justify-content:space-between;
+        }
+        .process-col-title {
+            font-size:1.15rem; font-weight:800; letter-spacing:-0.01em;
+        }
+        .process-steps { padding:1.5rem; display:flex; flex-direction:column; gap:0.5rem; }
+        .process-step {
+            display:grid; grid-template-columns:40px 1fr;
+            gap:1rem; align-items:start;
+            padding:1.2rem; border-radius:14px;
+            transition:background 0.3s;
+        }
+        .process-step:hover { background:var(--black-4); }
+        .step-num {
+            width:40px; height:40px; border-radius:12px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.75rem; font-weight:800; letter-spacing:0.04em;
+            flex-shrink:0;
+        }
+        .step-num.v { background:var(--orange-dim); color:var(--orange); border:1px solid var(--border-o); }
+        .step-num.ia { background:var(--ia-dim); color:var(--ia-color); border:1px solid var(--border-ia); }
+        .step-body {}
+        .step-title { font-size:0.9rem; font-weight:700; color:var(--white); margin-bottom:0.2rem; }
+        .step-desc { font-size:0.75rem; color:var(--gray); font-weight:300; line-height:1.5; }
+
+        /* ── SECTION 4 — BIO ── */
+        #bio { background: var(--black-2); }
+        #bio::before {
+            content:''; position:absolute; top:0; left:5%; right:5%;
+            height:1px; background:linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+        .bio-grid {
+            display:grid; grid-template-columns:1fr 1.4fr; gap:5rem;
+            align-items:start; margin-top:3.5rem;
+        }
+        .bio-portrait-wrap { position:relative; }
+        .bio-portrait {
+            width:100%; aspect-ratio:3/4;
+            border-radius:24px; overflow:hidden;
+            background:var(--black-3); border:1px solid var(--border);
+            display:flex; align-items:center; justify-content:center;
+            box-shadow: 0 0 60px rgba(255,106,0,0.1);
+            position:relative;
+        }
+        .bio-portrait::after {
+            content:''; position:absolute; inset:0;
+            background:
+                linear-gradient(180deg, rgba(11,11,11,0) 50%, rgba(11,11,11,0.6) 100%),
+                linear-gradient(0deg, rgba(11,11,11,0) 70%, rgba(255,106,0,0.08) 100%);
+            pointer-events:none;
+        }
+        .bio-portrait img {
+            width:100%; height:100%;
+            object-fit:cover; object-position:top center;
+            display:block;
+            filter: brightness(0.92) contrast(1.05);
+        }
+        .bio-portrait-placeholder {
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            gap:1rem; color:var(--gray); font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase;
+        }
+        .bio-portrait-glow {
+            position:absolute; top:-5%; left:50%; transform:translateX(-50%);
+            width:70%; height:50%;
+            background:radial-gradient(circle, rgba(255,106,0,0.18) 0%, transparent 70%);
+            filter:blur(40px); pointer-events:none; z-index:1;
+        }
+        .bio-badge {
+            position:absolute; top:1.5rem; right:1.5rem;
+            background:var(--black); border:1px solid var(--border);
+            border-radius:12px; padding:0.8rem 1rem; text-align:center;
+        }
+        .bio-badge .num { font-size:1.4rem; font-weight:900; color:var(--orange); }
+        .bio-badge .lbl { font-size:0.6rem; color:var(--gray); letter-spacing:0.08em; }
+        .bio-content {}
+        .bio-text {
+            font-size:0.95rem; color:var(--gray-2); line-height:1.95; font-weight:300;
+            margin-bottom:2.5rem;
+        }
+        .bio-text strong { color:var(--white); font-weight:500; }
+        .bio-text .accent { color:var(--orange); font-weight:500; }
+        .bio-milestones {
+            display:flex; flex-direction:column; gap:1rem;
+        }
+        .milestone {
+            display:grid; grid-template-columns:44px 1fr;
+            gap:1.2rem; align-items:center;
+            padding:1.2rem 1.5rem;
+            background:var(--black-3); border:1px solid var(--border);
+            border-radius:16px; transition:border-color 0.3s;
+        }
+        .milestone:hover { border-color:var(--border-o); }
+        .milestone-icon {
+            width:52px; height:52px; border-radius:12px;
+            background:var(--black-4); border:1px solid var(--border);
+            display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+            overflow:hidden; flex-shrink:0;
+        }
+        .milestone-icon img {
+            width:100%; height:100%;
+            object-fit:contain; padding:6px;
+        }
+        .milestone-icon.paris-badge {
+            flex-direction:column; gap:1px; padding:5px;
+            background: linear-gradient(135deg, #1a1400 0%, #2a2000 100%);
+            border-color: rgba(180,150,0,0.3);
+        }
+        .paris-flame { font-size:1.2rem; line-height:1; }
+        .paris-text { font-size:0.38rem; font-weight:800; letter-spacing:0.08em; color:#C8A800; }
+        .milestone-info .title { font-size:0.85rem; font-weight:600; color:var(--white); }
+        .milestone-info .sub { font-size:0.72rem; color:var(--gray); font-weight:300; margin-top:0.15rem; }
+
+        /* ── SECTION 5 — PROJETS ── */
+        #projects { background:var(--black-2); }
+        .projects-header {
+            display:flex; align-items:flex-end; justify-content:space-between;
+            margin-bottom:3.5rem;
+        }
+        .proj-count { font-size:0.75rem; color:var(--gray); letter-spacing:0.1em; }
+
+        /* Grid cards */
+        .projects-grid {
+            display:grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap:1.2rem;
+        }
+        .proj-card { border-radius:22px; overflow:hidden; cursor:pointer; transition:transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .proj-card:hover { transform:translateY(-6px); }
+        .proj-card:hover .proj-overlay { opacity:1; }
+        .proj-card:hover .proj-bg { transform:scale(1.06); }
+        .proj-card-a { grid-column:span 7; }
+        .proj-card-b { grid-column:span 5; }
+        .proj-card-c { grid-column:span 4; }
+        .proj-card-d { grid-column:span 4; }
+        .proj-card-e { grid-column:span 4; }
+        .proj-inner {
+            position:relative; overflow:hidden; border-radius:22px;
+            border:1px solid var(--border);
+        }
+        .proj-card-a .proj-inner,
+        .proj-card-b .proj-inner { height:400px; }
+        .proj-card-c .proj-inner,
+        .proj-card-d .proj-inner,
+        .proj-card-e .proj-inner { height:280px; }
+        .proj-bg {
+            position:absolute; inset:0;
+            background-size:cover; background-position:center;
+            transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);
+        }
+        /* Gradient backgrounds per project */
+        .pb-1 { background:linear-gradient(135deg, #1a0700 0%, #3D1600 40%, #8B3600 75%, rgba(255,106,0,0.4) 100%); }
+        .pb-2 { background:linear-gradient(135deg, #040412 0%, #0B0B32 50%, #141460 100%); }
+        .pb-3 { background:linear-gradient(135deg, #081208 0%, #102010 50%, #1A3A1A 100%); }
+        .pb-4 { background:linear-gradient(135deg, #0A0A0A 0%, #1A1500 50%, #2A2000 100%); }
+        .pb-5 { background:linear-gradient(135deg, #120808 0%, #1A0D00 50%, #2A1800 100%); }
+        .proj-gradient {
+            position:absolute; inset:0;
+            background:linear-gradient(0deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 55%, transparent 100%);
+        }
+        .proj-overlay {
+            position:absolute; inset:0;
+            background:rgba(255,106,0,0.06); opacity:0;
+            transition:opacity 0.3s; border-radius:22px;
+        }
+        .proj-info {
+            position:absolute; bottom:0; left:0; right:0;
+            padding:2rem; z-index:2;
+        }
+        .proj-cat {
+            font-size:0.6rem; font-weight:700; letter-spacing:0.2em;
+            text-transform:uppercase; color:var(--orange); margin-bottom:0.45rem;
+        }
+        .proj-title {
+            font-size:1.25rem; font-weight:700; color:var(--white);
+            letter-spacing:-0.01em; margin-bottom:0.75rem; line-height:1.2;
+        }
+        .proj-card-a .proj-title { font-size:1.65rem; }
+        .proj-award {
+            display:inline-flex; align-items:center; gap:0.4rem;
+            background:rgba(255,200,0,0.12); border:1px solid rgba(255,200,0,0.3);
+            color:#FFD700; padding:0.2rem 0.7rem; border-radius:100px;
+            font-size:0.6rem; font-weight:700; letter-spacing:0.08em;
+            margin-bottom:0.75rem; white-space:nowrap;
+        }
+        .proj-tags { display:flex; flex-wrap:wrap; gap:0.35rem; }
+        .proj-tag {
+            background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1);
+            color:var(--gray-2); padding:0.25rem 0.7rem; border-radius:100px;
+            font-size:0.62rem; font-weight:400; letter-spacing:0.02em;
+        }
+        /* Decorative glow shapes */
+        .deco-glow {
+            position:absolute; border-radius:50%; pointer-events:none; filter:blur(25px);
+        }
+        /* IA project cards — amber accent */
+        .proj-card.ia-project .proj-cat { color: var(--ia-color); }
+        .proj-card.ia-project .proj-overlay { background: rgba(255,176,32,0.06); }
+        .proj-card.ia-project:hover { transform:translateY(-6px); }
+        .ia-badge {
+            display:inline-flex; align-items:center; gap:0.35rem;
+            background:var(--ia-dim); border:1px solid var(--border-ia);
+            color:var(--ia-color); padding:0.18rem 0.65rem; border-radius:100px;
+            font-size:0.58rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+            margin-bottom:0.5rem;
+        }
+        /* Second row of cards — 6+6 */
+        .proj-card-f { grid-column:span 6; }
+        .proj-card-g { grid-column:span 6; }
+        .proj-card-f .proj-inner,
+        .proj-card-g .proj-inner { height:320px; }
+        .pb-6 { background: linear-gradient(135deg, #0D0808 0%, #1A0A0A 40%, #2A1010 70%, rgba(180,40,40,0.25) 100%); }
+        .pb-7 { background: linear-gradient(135deg, #08080D 0%, #0E0E1A 40%, #181028 70%, rgba(120,80,200,0.2) 100%); }
+
+        /* ── SECTION 6 — OFFRES ── */
+        #offres { background:var(--black-2); }
+        #offres::before {
+            content:''; position:absolute; top:0; left:5%; right:5%;
+            height:1px; background:linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+        .offres-grid {
+            display:grid; grid-template-columns:1fr 1fr; gap:2rem;
+            margin-top:4rem;
+        }
+        .offre-card {
+            border-radius:24px; overflow:hidden;
+            border:1px solid var(--border);
+            background:var(--black-3);
+        }
+        .offre-header {
+            padding:2.5rem; border-bottom:1px solid var(--border);
+            position:relative; overflow:hidden;
+        }
+        .offre-header::before {
+            content:''; position:absolute; top:-40px; right:-40px;
+            width:160px; height:160px; border-radius:50%; filter:blur(40px);
+            pointer-events:none;
+        }
+        .offre-card.video .offre-header::before { background:rgba(255,106,0,0.15); }
+        .offre-card.ia .offre-header::before { background:rgba(255,176,32,0.15); }
+        .offre-icon {
+            font-size:2rem; margin-bottom:1.2rem; display:block;
+        }
+        .offre-title { font-size:1.5rem; font-weight:800; letter-spacing:-0.02em; margin-bottom:0.5rem; }
+        .offre-subtitle { font-size:0.8rem; color:var(--gray); font-weight:300; line-height:1.6; }
+        .offre-body { padding:2.5rem; }
+        .offre-price-label {
+            font-size:0.62rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+            color:var(--gray); margin-bottom:0.5rem;
+        }
+        .offre-price {
+            font-size:2.2rem; font-weight:900; letter-spacing:-0.02em;
+            line-height:1; margin-bottom:0.3rem;
+        }
+        .offre-price.video { color:var(--orange); }
+        .offre-price.ia { color:var(--ia-color); }
+        .offre-price-note { font-size:0.72rem; color:var(--gray); margin-bottom:2rem; }
+        .offre-items { display:flex; flex-direction:column; gap:0.8rem; margin-bottom:2rem; }
+        .offre-item {
+            display:flex; align-items:flex-start; gap:0.8rem;
+            font-size:0.82rem; color:var(--gray-2); font-weight:300; line-height:1.5;
+        }
+        .offre-check {
+            width:20px; height:20px; border-radius:6px; flex-shrink:0; margin-top:1px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.7rem;
+        }
+        .offre-check.v { background:var(--orange-dim); color:var(--orange); }
+        .offre-check.ia { background:var(--ia-dim); color:var(--ia-color); }
+        .offre-divider { height:1px; background:var(--border); margin:1.5rem 0; }
+        .pricing-grid-title {
+            font-size:0.65rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase;
+            color:var(--ia-color); margin-bottom:1rem;
+        }
+        .pricing-grid-table {
+            display:grid; grid-template-columns:1fr 1fr;
+            gap:0.6rem; margin-bottom:1.5rem;
+        }
+        .pricing-cell {
+            background:var(--black-4); border:1px solid var(--border);
+            border-radius:12px; padding:1rem;
+        }
+        .pricing-cell .qty {
+            font-size:1.1rem; font-weight:800; color:var(--white); line-height:1;
+        }
+        .pricing-cell .price-ia {
+            font-size:1rem; font-weight:700; color:var(--ia-color); line-height:1;
+        }
+        .pricing-cell .unit { font-size:0.62rem; color:var(--gray); margin-top:0.25rem; }
+        .pricing-cell .badge-saving {
+            display:inline-block; background:rgba(255,176,32,0.12);
+            color:var(--ia-color); border-radius:6px;
+            font-size:0.58rem; font-weight:700; padding:0.15rem 0.4rem; margin-top:0.3rem;
+        }
+        .offre-cta {
+            display:block; text-align:center; text-decoration:none;
+            padding:0.9rem; border-radius:14px;
+            font-size:0.82rem; font-weight:700; letter-spacing:0.04em;
+            transition:all 0.3s;
+        }
+        .offre-cta.v { background:var(--orange); color:var(--black); }
+        .offre-cta.v:hover { background:var(--orange-2); box-shadow:0 15px 40px rgba(255,106,0,0.3); }
+        .offre-cta.ia { background:var(--ia-dim); border:1px solid var(--border-ia); color:var(--ia-color); }
+        .offre-cta.ia:hover { background:rgba(255,176,32,0.18); }
+        .offre-note {
+            font-size:0.7rem; color:var(--gray); text-align:center; margin-top:1rem;
+        }
+
+        /* ── CONTACT ── */
+        #contact { background:var(--black); overflow:hidden; }
+        #contact::before {
+            content:''; position:absolute; top:50%; left:50%;
+            transform:translate(-50%,-50%);
+            width:60vw; height:60vw; border-radius:50%;
+            background:radial-gradient(circle, rgba(255,106,0,0.07) 0%, transparent 65%);
+            filter:blur(40px); pointer-events:none;
+        }
+        .contact-grid {
+            display:grid; grid-template-columns:1fr 1fr; gap:6rem;
+            align-items:center; position:relative; z-index:1;
+        }
+        .contact-heading {
+            font-size:clamp(2.5rem,4vw,3.8rem); font-weight:900;
+            letter-spacing:-0.03em; line-height:1.05; margin-bottom:1.2rem;
+        }
+        .contact-sub { font-size:0.92rem; color:var(--gray); line-height:1.85; font-weight:300; }
+        .contact-items { display:flex; flex-direction:column; gap:1rem; }
+        .contact-link {
+            display:grid; grid-template-columns:44px 1fr auto; gap:1.2rem; align-items:center;
+            padding:1.2rem 1.5rem; background:var(--black-3); border:1px solid var(--border);
+            border-radius:16px; text-decoration:none; color:var(--white);
+            transition:all 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+        .contact-link:hover { border-color:var(--border-o); background:rgba(255,106,0,0.04); transform:translateX(8px); }
+        .contact-link:hover .c-arrow { color:var(--orange); }
+        .c-icon {
+            width:44px; height:44px; border-radius:12px;
+            background:var(--orange-dim); border:1px solid var(--border-o);
+            display:flex; align-items:center; justify-content:center; font-size:1rem;
+        }
+        .c-lbl { font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--gray); font-weight:600; margin-bottom:0.15rem; }
+        .c-val { font-size:0.88rem; font-weight:500; color:var(--white); }
+        .c-arrow { color:rgba(255,255,255,0.2); transition:color 0.3s; }
+        .contact-cta {
+            display:flex; align-items:center; gap:0.7rem;
+            background:var(--orange); color:var(--black);
+            padding:1rem 2rem; border-radius:100px;
+            font-size:0.85rem; font-weight:700; text-decoration:none;
+            margin-top:0.5rem; width:fit-content;
+            transition:all 0.3s;
+        }
+        .contact-cta:hover { background:var(--orange-2); transform:translateY(-3px); box-shadow:0 20px 50px rgba(255,106,0,0.3); }
+
+        /* ── FOOTER ── */
+        footer {
+            padding:1.8rem 5rem; border-top:1px solid var(--border);
+            display:flex; align-items:center; justify-content:space-between;
+            background:var(--black-2);
+        }
+        .footer-logo img { height:24px; }
+        .footer-copy { font-size:0.75rem; color:var(--gray); }
+        .footer-links { display:flex; gap:2rem; }
+        .footer-links a { font-size:0.72rem; color:var(--gray); text-decoration:none; transition:color 0.3s; }
+        .footer-links a:hover { color:var(--orange); }
+
+        /* ── SCROLL PROGRESS BAR ── */
+        #scroll-bar {
+            position: fixed; top:0; left:0; height:2px; z-index:9999;
+            background: linear-gradient(90deg, #FF6A00, #FFB870);
+            width:0%; transition: width 0.1s linear;
+            box-shadow: 0 0 8px rgba(255,106,0,0.6);
+        }
+
+        /* ── FLOATING GLOW ANIMATION ── */
+        @keyframes glow-float-1 {
+            0%,100% { transform: translate(0,0) scale(1); opacity:0.85; }
+            33%      { transform: translate(-15px, 20px) scale(1.06); opacity:1; }
+            66%      { transform: translate(10px, -10px) scale(0.97); opacity:0.7; }
+        }
+        @keyframes glow-float-2 {
+            0%,100% { transform: translate(0,0) scale(1); opacity:0.7; }
+            40%      { transform: translate(20px, -15px) scale(1.08); opacity:0.9; }
+            70%      { transform: translate(-8px, 12px) scale(0.95); opacity:0.6; }
+        }
+        .hero-glow-1 { animation: glow-float-1 9s ease-in-out infinite; }
+        .hero-glow-2 { animation: glow-float-2 12s ease-in-out infinite; }
+
+        /* ── SHIMMER on gradient text ── */
+        @keyframes grad-sweep {
+            0%   { background-position: -200% center; }
+            100% { background-position:  200% center; }
+        }
+        .hero-headline .grad {
+            background: linear-gradient(120deg, #FF6A00 0%, #FF9040 30%, #FFE0B0 50%, #FF9040 70%, #FFB870 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: grad-sweep 4s linear infinite;
+        }
+
+        /* ── PROJECT CARD TILT (via JS inline transform, prep here) ── */
+        .proj-card { transform-style: preserve-3d; perspective: 800px; will-change: transform; }
+        .proj-card .proj-inner { transition: box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .proj-card:hover .proj-inner {
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(255,106,0,0.12);
+        }
+        .proj-card.ia-project:hover .proj-inner {
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(255,176,32,0.12);
+        }
+
+        /* ── CONTACT GLOW breathe ── */
+        @keyframes contact-glow-breathe {
+            0%,100% { opacity:0.07; transform:translate(-50%,-50%) scale(1); }
+            50%      { opacity:0.13; transform:translate(-50%,-50%) scale(1.1); }
+        }
+        #contact::before { animation: contact-glow-breathe 6s ease-in-out infinite; }
+
+        /* ── NAV active indicator ── */
+        .nav-links a.nav-active { color: var(--white) !important; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1100px) {
+            nav { padding: 0 2rem; }
+            section { padding: 5rem 2rem; }
+            #hero { grid-template-columns: 1fr; padding: 9rem 2rem 5rem; }
+            .hero-right-col { display:none; }
+            .hero-left-col { padding-right:0; }
+            .process-grid, .bio-grid, .offres-grid, .contact-grid { grid-template-columns:1fr; gap:2rem; }
+            .process-intro { grid-template-columns:1fr; }
+            .manifeste-inner { grid-template-columns:1fr; gap:2rem; }
+            footer { padding:1.5rem 2rem; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display:none; }
+            section { padding:4rem 1.5rem; }
+            .hero-headline { font-size:2.4rem; }
+            footer { flex-direction:column; gap:1rem; text-align:center; }
+        }
+    </style>
+</head>
+<body>
+<div id="scroll-bar"></div>
+
+<!-- ── NAVBAR ── -->
+<nav>
+    <div class="nav-logo"><img src="moovii-logo.png" alt="MOOVII"></div>
+    <ul class="nav-links">
+        <li><a href="#process" class="nav-studio-v">🎬 Studio Vidéo</a></li>
+        <li><a href="#process" class="nav-studio-ia">✨ Studio IA</a></li>
+        <div class="nav-sep"></div>
+        <li><a href="#projects">Projets</a></li>
+        <li><a href="#bio">À propos</a></li>
+        <li><a href="#offres">Offres</a></li>
+        <li><a href="#contact" class="nav-cta">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- ────────────────────────────────────────────
+     SECTION 1 — HERO
+──────────────────────────────────────────── -->
+<section id="hero">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+
+    <!-- Colonne gauche — texte -->
+    <div class="hero-left-col">
+        <div class="hero-studios fade-up">
+            <span class="studio-pill video"><span class="pill-dot"></span>Studio Vidéo</span>
+            <span class="studio-pill ia"><span class="pill-dot"></span>Studio IA</span>
+        </div>
+
+        <h1 class="hero-headline fade-up d1">
+            Donnez de l'impact<br>
+            à vos <span class="grad">événements</span><br>
+            et produits.
+        </h1>
+
+        <div class="hero-argument fade-up d2">
+            <p>
+                Une approche <strong>stratégique et sur mesure</strong> — afin d'analyser, structurer et formaliser votre projet dans un <strong>cahier des charges sur mesure.</strong>
+            </p>
+        </div>
+
+        <div class="hero-ctas fade-up d3">
+            <a href="#process" class="btn-primary">Studio Vidéo →</a>
+            <a href="#process" class="btn-secondary">Studio IA →</a>
+            <a href="#projects" class="btn-outline">Voir les projets</a>
+        </div>
+    </div>
+
+    <!-- Colonne droite — photo incrustée -->
+    <div class="hero-right-col">
+        <div class="hero-photo-glow"></div>
+        <div class="hero-photo-wrap">
+            <img src="photo-action.png" alt="Fabien — Cadreur aux Jeux Paralympiques Paris 2024">
+        </div>
+    </div>
+
+    <div class="scroll-cue">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- ────────────────────────────────────────────
+     SECTION 2 — MANIFESTE
+──────────────────────────────────────────── -->
+<section id="manifeste">
+    <div class="eyebrow white fade-up">02 — Le constat</div>
+
+    <div class="manifeste-inner">
+        <div class="manifeste-left fade-up d1">
+            <p class="manifeste-summary">
+                Pourquoi investir dans des contenus visuels forts ? Parce que l'attention ne s'achète plus — elle se mérite. Voici ce que nous observons.
+            </p>
+        </div>
+        <div class="manifeste-right">
+            <div class="manifeste-stmt fade-up">
+                <span class="stmt-index">01</span>
+                <p class="stmt-text">Aujourd'hui, <strong>l'attention est une ressource rare.</strong></p>
+            </div>
+            <div class="manifeste-stmt fade-up d1">
+                <span class="stmt-index">02</span>
+                <p class="stmt-text">Sans contenus forts, <strong>événements et produits passent inaperçus.</strong></p>
+            </div>
+            <div class="manifeste-stmt fade-up d2">
+                <span class="stmt-index">03</span>
+                <p class="stmt-text">La vidéo <strong>capte, raconte et crée de l'émotion.</strong> <span class="pill-v">Studio Vidéo</span></p>
+            </div>
+            <div class="manifeste-stmt fade-up d3">
+                <span class="stmt-index">04</span>
+                <p class="stmt-text">Le studio IA permet d'<strong>explorer, d'innover et de se démarquer</strong> autrement. <span class="pill-ia">Studio IA</span></p>
+            </div>
+            <div class="manifeste-stmt is-final fade-up d4">
+                <span class="stmt-index">—</span>
+                <p class="stmt-text">Deux approches complémentaires pour un même objectif : créer des contenus qui font la différence.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ────────────────────────────────────────────
+     SECTION 3 — PROCESS
+──────────────────────────────────────────── -->
+<section id="process">
+    <div class="process-intro">
+        <div>
+            <div class="eyebrow orange fade-up">03 — Notre méthode</div>
+            <h2 class="section-title fade-up d1">Deux studios,<br>une ambition<span class="dot-o">.</span></h2>
+        </div>
+        <p class="process-desc fade-up d2">
+            Chaque projet débute par une phase de stratégie commune — définir les bons angles, choisir le bon format — avant de s'engager dans l'une ou l'autre des deux voies de production.
+        </p>
+    </div>
+
+    <div class="process-grid">
+
+        <!-- Studio Vidéo -->
+        <div class="process-col fade-up">
+            <div class="process-col-header">
+                <div>
+                    <div class="process-col-title">Studio Vidéo</div>
+                    <div style="font-size:0.72rem; color:var(--gray); margin-top:0.2rem;">6 étapes</div>
+                </div>
+                <span class="studio-pill video"><span class="pill-dot"></span>Vidéo</span>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-num v">01</div>
+                    <div class="step-body">
+                        <div class="step-title">Stratégie</div>
+                        <div class="step-desc">Définition des angles à attaquer, choix du format le plus adapté à la demande et aux objectifs</div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num v">02</div>
+                    <div class="step-body">
+                        <div class="step-title">Pré-production</div>
+                        <div class="step-desc">On met tout en place avant le tournage — storyboard, repérages, équipe, planning</div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num v">03</div>
+                    <div class="step-body">
+                        <div class="step-title">Tournage</div>
+                        <div class="step-desc">Captation sur le terrain avec une direction de photographie soignée</div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num v">04</div>
+                    <div class="step-body">
+                        <div class="step-title">Montage & suivi de projet</div>
+                        <div class="step-desc">Montage, étalonnage, allers-retours avec le client, validation à chaque étape</div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num v">05</div>
+                    <div class="step-body">
+                        <div class="step-title">Livraison</div>
+                        <div class="step-desc">Fichiers optimisés pour chaque usage — web, réseaux, projection, broadcast</div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num v">06</div>
+                    <div class="step-body">
+                        <div class="step-title">Analyse des résultats</div>
+                        <div class="step-desc">Bilan de la performance du contenu et recommandations pour la suite</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Studio IA -->
+        <div class="process-col fade-up d2">
+            <div class="process-col-header">
+                <div>
+                    <div class="process-col-title">Studio IA</div>
+                    <div style="font-size:0.72rem; color:var(--gray); margin-top:0.2rem;">5 étapes</div>
+                </div>
+                <span class="studio-pill ia"><span class="pill-dot"></span>IA</span>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-num ia">01</div>
+                    <div class="step-body">
+                        <div class="step-title">Stratégie</div>
+                        <div class="step-desc">Définition des angles à attaquer, choix du format et du style visuel le plus pertinent</div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num ia">02</div>
+                    <div class="step-body">
+                        <div class="step-title">Mise en place du workflow</div>
+                        <div class="step-desc">Configuration des outils, des pipelines IA et du système de génération adapté au projet</div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num ia">03</div>
+                    <div class="step-body">
+                        <div class="step-title">Création des visuels</div>
+                        <div class="step-desc">Génération, curation et retouche — chaque visuel est supervisé par un œil humain expert</div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num ia">04</div>
+                    <div class="step-body">
+                        <div class="step-title">Livraison</div>
+                        <div class="step-desc">Fichiers haute qualité, optimisés et prêts à l'emploi pour tous vos supports</div>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num ia">05</div>
+                    <div class="step-body">
+                        <div class="step-title">Analyse des résultats</div>
+                        <div class="step-desc">Bilan de la performance des visuels et itérations si besoin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ────────────────────────────────────────────
+     SECTION 4 — BIO
+──────────────────────────────────────────── -->
+<section id="bio">
+    <div class="eyebrow white fade-up">04 — Qui est derrière MOOVII</div>
+    <h2 class="section-title fade-up d1">Fabien<span class="dot-o">.</span></h2>
+
+    <div class="bio-grid">
+        <div class="bio-portrait-wrap fade-up">
+            <div class="bio-portrait">
+                <div class="bio-portrait-glow"></div>
+                <img src="photo-fabien.png" alt="Fabien">
+            </div>
+            <div class="bio-badge">
+                <div class="num">50+</div>
+                <div class="lbl">projets</div>
+            </div>
+        </div>
+
+        <div class="bio-content fade-up d1">
+            <p class="bio-text">
+                Depuis mon enfance, je suis passionné par la <strong>création de vidéos</strong>. Issu de la génération autodidacte qui a appris à filmer et monter grâce aux tutoriels YouTube dès <span class="accent">13 ans</span>.
+                <br><br>
+                En 2015, j'ai rejoint le <strong>CREPS de Bordeaux</strong> pour mener un double projet : escrime et école de cinéma. Cette ville est devenue depuis <strong>ma résidence et mon terrain de création.</strong>
+                <br><br>
+                C'est ici qu'est né <span class="accent">MOOVII</span>.
+            </p>
+
+            <div class="bio-milestones">
+                <div class="milestone">
+                    <div class="milestone-icon paris-badge">
+                        <div class="paris-flame">🔥</div>
+                        <div class="paris-text">PARIS 2024</div>
+                    </div>
+                    <div class="milestone-info">
+                        <div class="title">Paris 2024 — Cadreur & Monteur</div>
+                        <div class="sub">28 vidéos montées en 16 jours · Comité International Paralympique</div>
+                    </div>
+                </div>
+                <div class="milestone">
+                    <div class="milestone-icon">
+                        <img src="logo-nrj.png" alt="NRJ">
+                    </div>
+                    <div class="milestone-info">
+                        <div class="title">Manu Levy — Community Manager & Monteur</div>
+                        <div class="sub">Depuis 2022 · +700K abonnés Instagram · +1,9M Facebook</div>
+                    </div>
+                </div>
+                <div class="milestone">
+                    <div class="milestone-icon">🎓</div>
+                    <div class="milestone-info">
+                        <div class="title">« L'envers de la médaille » — Documentaire primé</div>
+                        <div class="sub">Meilleur Film · Meilleur Montage · Meilleur Sound-Design</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ────────────────────────────────────────────
+     SECTION 5 — PROJETS
+──────────────────────────────────────────── -->
+<section id="projects">
+    <div class="projects-header">
+        <div>
+            <div class="eyebrow orange fade-up">05 — Réalisations</div>
+            <h2 class="section-title fade-up d1">Projets<span class="dot-o">.</span></h2>
+        </div>
+        <span class="proj-count fade-up">07 projets sélectionnés</span>
+    </div>
+
+    <div class="projects-grid">
+
+        <!-- Card A — Large -->
+        <div class="proj-card proj-card-a fade-up">
+            <div class="proj-inner">
+                <div class="proj-bg pb-1"></div>
+                <div class="deco-glow" style="top:10%;right:10%;width:120px;height:120px;background:rgba(255,106,0,0.5);"></div>
+                <div class="proj-gradient"></div>
+                <div class="proj-overlay"></div>
+                <div class="proj-info">
+                    <div class="proj-cat">Documentaire</div>
+                    <div class="proj-title">L'envers de la médaille</div>
+                    <div class="proj-award">🏆 Meilleur film · Sound design · Montage</div>
+                    <div class="proj-tags">
+                        <span class="proj-tag">Documentaire</span>
+                        <span class="proj-tag">École de cinéma</span>
+                        <span class="proj-tag">Escrime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card B -->
+        <div class="proj-card proj-card-b fade-up d1">
+            <div class="proj-inner">
+                <div class="proj-bg pb-2"></div>
+                <div class="deco-glow" style="top:25%;left:50%;transform:translateX(-50%);width:90px;height:90px;background:rgba(80,80,255,0.5);"></div>
+                <div class="proj-gradient"></div>
+                <div class="proj-overlay"></div>
+                <div class="proj-info">
+                    <div class="proj-cat">Sport · IPC</div>
+                    <div class="proj-title">Wheelchair Tennis — Roland Garros</div>
+                    <div class="proj-tags">
+                        <span class="proj-tag">Institutionnel</span>
+                        <span class="proj-tag">IPC</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card C -->
+        <div class="proj-card proj-card-c fade-up">
+            <div class="proj-inner">
+                <div class="proj-bg pb-3"></div>
+                <div class="deco-glow" style="top:15%;right:15%;width:70px;height:70px;background:rgba(60,180,80,0.45);"></div>
+                <div class="proj-gradient"></div>
+                <div class="proj-overlay"></div>
+                <div class="proj-info">
+                    <div class="proj-cat">Reportage · Sport</div>
+                    <div class="proj-title">Team Passe Avant Fencing</div>
+                    <div class="proj-tags">
+                        <span class="proj-tag">Escrime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card D -->
+        <div class="proj-card proj-card-d fade-up d1">
+            <div class="proj-inner">
+                <div class="proj-bg pb-4"></div>
+                <div class="deco-glow" style="bottom:40%;left:20%;width:60px;height:60px;background:rgba(255,180,0,0.4);"></div>
+                <div class="proj-gradient"></div>
+                <div class="proj-overlay"></div>
+                <div class="proj-info">
+                    <div class="proj-cat">Sport · Événement</div>
+                    <div class="proj-title">BNP Paribas Primerose 2024</div>
+                    <div class="proj-tags">
+                        <span class="proj-tag">Teaser</span>
+                        <span class="proj-tag">ATP 175</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card E -->
+        <div class="proj-card proj-card-e fade-up d2">
+            <div class="proj-inner">
+                <div class="proj-bg pb-5"></div>
+                <div class="deco-glow" style="top:20%;right:15%;width:60px;height:60px;background:rgba(255,106,0,0.4);"></div>
+                <div class="proj-gradient"></div>
+                <div class="proj-overlay"></div>
+                <div class="proj-info">
+                    <div class="proj-cat">Sport · International</div>
+                    <div class="proj-title">Bordeaux Summer Camp</div>
+                    <div class="proj-tags">
+                        <span class="proj-tag">Teaser</span>
+                        <span class="proj-tag">Escrime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card F — IA : Raffinata -->
+        <div class="proj-card proj-card-f ia-project fade-up">
+            <div class="proj-inner">
+                <div class="proj-bg pb-6"></div>
+                <div class="deco-glow" style="top:15%;right:20%;width:100px;height:100px;background:rgba(200,60,80,0.35);"></div>
+                <div class="deco-glow" style="bottom:30%;left:10%;width:60px;height:60px;background:rgba(255,100,100,0.2);"></div>
+                <div class="proj-gradient"></div>
+                <div class="proj-overlay"></div>
+                <div class="proj-info">
+                    <div class="ia-badge">✨ Studio IA</div>
+                    <div class="proj-cat">Mode · Sport féminin</div>
+                    <div class="proj-title">Raffinata</div>
+                    <div class="proj-tags">
+                        <span class="proj-tag">Photo IA</span>
+                        <span class="proj-tag">Branding</span>
+                        <span class="proj-tag">Mode</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card G — IA : Bloom -->
+        <div class="proj-card proj-card-g ia-project fade-up d1">
+            <div class="proj-inner">
+                <div class="proj-bg pb-7"></div>
+                <div class="deco-glow" style="top:20%;left:30%;width:120px;height:120px;background:rgba(140,80,220,0.3);"></div>
+                <div class="deco-glow" style="bottom:25%;right:15%;width:70px;height:70px;background:rgba(180,100,255,0.2);"></div>
+                <div class="proj-gradient"></div>
+                <div class="proj-overlay"></div>
+                <div class="proj-info">
+                    <div class="ia-badge">✨ Studio IA</div>
+                    <div class="proj-cat">Lifestyle · Bien-être</div>
+                    <div class="proj-title">Bloom</div>
+                    <div class="proj-tags">
+                        <span class="proj-tag">Photo IA</span>
+                        <span class="proj-tag">Encens</span>
+                        <span class="proj-tag">Ambiance</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ────────────────────────────────────────────
+     SECTION 6 — OFFRES
+──────────────────────────────────────────── -->
+<section id="offres">
+    <div class="eyebrow orange fade-up">06 — Offres</div>
+    <h2 class="section-title fade-up d1">Investissez dans<br>vos contenus<span class="dot-o">.</span></h2>
+
+    <div class="offres-grid">
+
+        <!-- Studio Vidéo -->
+        <div class="offre-card video fade-up">
+            <div class="offre-header">
+                <span class="offre-icon">🎬</span>
+                <div class="offre-title">Studio Vidéo</div>
+                <div class="offre-subtitle">Conception, tournage, montage et livraison — une production vidéo complète de A à Z.</div>
+            </div>
+            <div class="offre-body">
+                <div class="offre-price-label">À partir de</div>
+                <div class="offre-price video">Sur devis</div>
+                <div class="offre-price-note">Chaque projet est unique — tarif adapté au scope</div>
+                <div class="offre-items">
+                    <div class="offre-item">
+                        <div class="offre-check v">✓</div>
+                        <span>Appel stratégie & conseil (cadrage du besoin)</span>
+                    </div>
+                    <div class="offre-item">
+                        <div class="offre-check v">✓</div>
+                        <span>Pré-production complète (planning, repérages, organisation)</span>
+                    </div>
+                    <div class="offre-item">
+                        <div class="offre-check v">✓</div>
+                        <span>Tournage</span>
+                    </div>
+                    <div class="offre-item">
+                        <div class="offre-check v">✓</div>
+                        <span>Montage, étalonnage & suivi de projet</span>
+                    </div>
+                    <div class="offre-item">
+                        <div class="offre-check v">✓</div>
+                        <span>Livraison multi-formats (web, réseaux…)</span>
+                    </div>
+                    <div class="offre-item">
+                        <div class="offre-check v">✓</div>
+                        <span>Analyse des résultats & bilan</span>
+                    </div>
+                </div>
+                <a href="#contact" class="offre-cta v">Demander un devis →</a>
+                <p class="offre-note">Exemples : Teaser événement · Film institutionnel · Clip · Reportage</p>
+            </div>
+        </div>
+
+        <!-- Studio IA -->
+        <div class="offre-card ia fade-up d2">
+            <div class="offre-header">
+                <span class="offre-icon">✨</span>
+                <div class="offre-title">Studio IA</div>
+                <div class="offre-subtitle">Production de visuels photoréalistes grâce à l'IA, avec direction experte — pour un rendu indiscernable du réel.</div>
+            </div>
+            <div class="offre-body">
+                <div class="offre-price-label">Frais d'installation</div>
+                <div class="offre-price ia">1 500 — 2 000€</div>
+                <div class="offre-price-note">Setup du workflow IA · Stratégie · Mise en place du pipeline de génération</div>
+
+                <div class="offre-items">
+                    <div class="offre-item">
+                        <div class="offre-check ia">✓</div>
+                        <span>Audit de votre besoin & définition du style visuel</span>
+                    </div>
+                    <div class="offre-item">
+                        <div class="offre-check ia">✓</div>
+                        <span>Configuration du workflow IA sur mesure</span>
+                    </div>
+                    <div class="offre-item">
+                        <div class="offre-check ia">✓</div>
+                        <span>Supervision humaine experte sur chaque visuel</span>
+                    </div>
+                    <div class="offre-item">
+                        <div class="offre-check ia">✓</div>
+                        <span>Livraison haute qualité, prêts à l'emploi</span>
+                    </div>
+                </div>
+
+                <div class="offre-divider"></div>
+                <div class="pricing-grid-title">Grille tarifaire — Production</div>
+                <div class="pricing-grid-table">
+                    <div class="pricing-cell">
+                        <div class="qty">20 visuels</div>
+                        <div class="price-ia">400€</div>
+                        <div class="unit">20€ / visuel</div>
+                    </div>
+                    <div class="pricing-cell">
+                        <div class="qty">40 visuels</div>
+                        <div class="price-ia">700€</div>
+                        <div class="unit">17,5€ / visuel</div>
+                        <div class="badge-saving">−12%</div>
+                    </div>
+                    <div class="pricing-cell">
+                        <div class="qty">60 visuels</div>
+                        <div class="price-ia">900€</div>
+                        <div class="unit">15€ / visuel</div>
+                        <div class="badge-saving">−25%</div>
+                    </div>
+                    <div class="pricing-cell">
+                        <div class="qty">Volume +</div>
+                        <div class="price-ia">Sur devis</div>
+                        <div class="unit">Tarif dégressif</div>
+                        <div class="badge-saving">Meilleur tarif</div>
+                    </div>
+                </div>
+
+                <a href="#contact" class="offre-cta ia">Démarrer le studio IA →</a>
+                <p class="offre-note">Frais d'installation + production facturés séparément</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ────────────────────────────────────────────
+     CONTACT
+──────────────────────────────────────────── -->
+<section id="contact">
+    <div class="contact-grid">
+        <div class="fade-up">
+            <div class="eyebrow orange">Contact</div>
+            <h2 class="contact-heading">Parlons de<br>votre projet<span class="dot-o">.</span></h2>
+            <p class="contact-sub">
+                Un événement à filmer, une campagne à lancer ? Prenons 20 minutes pour en parler — sans engagement.
+            </p>
+        </div>
+        <div class="contact-items fade-up d2">
+            <a href="tel:+33763408852" class="contact-link">
+                <div class="c-icon">📞</div>
+                <div><div class="c-lbl">Téléphone</div><div class="c-val">07 63 40 88 52</div></div>
+                <span class="c-arrow">→</span>
+            </a>
+            <a href="mailto:moovii.films@gmail.com" class="contact-link">
+                <div class="c-icon">✉️</div>
+                <div><div class="c-lbl">Email</div><div class="c-val">moovii.films@gmail.com</div></div>
+                <span class="c-arrow">→</span>
+            </a>
+            <a href="https://www.instagram.com/fabsduchesnay/" target="_blank" rel="noopener" class="contact-link">
+                <div class="c-icon">📷</div>
+                <div><div class="c-lbl">Instagram</div><div class="c-val">@fabsduchesnay</div></div>
+                <span class="c-arrow">→</span>
+            </a>
+            <div class="contact-link" style="cursor:default;opacity:0.5;">
+                <div class="c-icon">🎬</div>
+                <div><div class="c-lbl">Showreel</div><div class="c-val">Bientôt disponible !</div></div>
+                <span class="c-arrow" style="opacity:0;">→</span>
+            </div>
+            <a href="mailto:moovii.films@gmail.com" class="contact-cta">
+                Démarrer un projet →
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="footer-logo"><img src="moovii-logo.png" alt="MOOVII"></div>
+    <div class="footer-copy">© 2025 MOOVII — Tous droits réservés</div>
+    <div class="footer-links">
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Vimeo</a>
+        <a href="#">Mentions légales</a>
+    </div>
+</footer>
+
+<script>
+    // ── Fade-up animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── Scroll progress bar
+    const scrollBar = document.getElementById('scroll-bar');
+    function updateScrollBar() {
+        const scrolled = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        scrollBar.style.width = (scrolled / total * 100) + '%';
+    }
+    window.addEventListener('scroll', updateScrollBar, { passive: true });
+
+    // ── Navbar: background on scroll + active section highlight
+    const nav = document.querySelector('nav');
+    const sections = document.querySelectorAll('section[id], footer');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    window.addEventListener('scroll', () => {
+        nav.style.background = window.scrollY > 60
+            ? 'rgba(11,11,11,0.98)'
+            : 'rgba(11,11,11,0.85)';
+
+        // Active section
+        let current = '';
+        sections.forEach(sec => {
+            if (window.scrollY >= sec.offsetTop - 120) current = sec.id;
+        });
+        navLinks.forEach(a => {
+            a.classList.toggle('nav-active', a.getAttribute('href') === '#' + current);
+        });
+    }, { passive: true });
+
+    // ── Count-up animation for bio badge "50+"
+    function countUp(el, target, duration) {
+        let start = 0;
+        const step = Math.ceil(target / (duration / 16));
+        const timer = setInterval(() => {
+            start += step;
+            if (start >= target) { start = target; clearInterval(timer); }
+            el.textContent = start + '+';
+        }, 16);
+    }
+    const bioNum = document.querySelector('.bio-badge .num');
+    if (bioNum) {
+        const bioObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    countUp(bioNum, 50, 1200);
+                    bioObs.disconnect();
+                }
+            });
+        }, { threshold: 0.5 });
+        bioObs.observe(bioNum);
+    }
+
+    // ── 3D tilt on project cards
+    document.querySelectorAll('.proj-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width  - 0.5;
+            const y = (e.clientY - r.top)  / r.height - 0.5;
+            card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-6px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+    });
+
+    // ── Subtle cursor glow
+    const cursorGlow = document.createElement('div');
+    cursorGlow.style.cssText = `
+        position:fixed; width:300px; height:300px; border-radius:50%;
+        background:radial-gradient(circle, rgba(255,106,0,0.06) 0%, transparent 70%);
+        pointer-events:none; z-index:0; transform:translate(-50%,-50%);
+        transition: left 0.25s ease, top 0.25s ease;
+    `;
+    document.body.appendChild(cursorGlow);
+    document.addEventListener('mousemove', e => {
+        cursorGlow.style.left = e.clientX + 'px';
+        cursorGlow.style.top  = e.clientY + 'px';
+    });
+</script>
+</body>
+</html>
