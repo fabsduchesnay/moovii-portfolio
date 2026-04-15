@@ -812,12 +812,48 @@
             .process-intro { grid-template-columns:1fr; }
             .manifeste-inner { grid-template-columns:1fr; gap:2rem; }
             footer { padding:1.5rem 2rem; }
+
+            /* Projets — tablette */
+            .proj-card-a, .proj-card-b { grid-column: span 12; }
+            .proj-card-a .proj-inner, .proj-card-b .proj-inner { height: 320px; }
+            .proj-card-c, .proj-card-d, .proj-card-e { grid-column: span 6; }
+            .proj-card-f, .proj-card-g { grid-column: span 12; }
         }
         @media (max-width: 768px) {
             .nav-links { display:none; }
             section { padding:4rem 1.5rem; }
             .hero-headline { font-size:2.4rem; }
             footer { flex-direction:column; gap:1rem; text-align:center; }
+
+            /* Projets — mobile */
+            .proj-card-a, .proj-card-b,
+            .proj-card-c, .proj-card-d, .proj-card-e,
+            .proj-card-f, .proj-card-g { grid-column: span 12; }
+            .proj-card-c .proj-inner,
+            .proj-card-d .proj-inner,
+            .proj-card-e .proj-inner { height: 240px; }
+            .proj-card-f .proj-inner,
+            .proj-card-g .proj-inner { height: 260px; }
+
+            /* Bio — mobile */
+            .bio-grid { grid-template-columns: 1fr; }
+            .bio-portrait { aspect-ratio: 1/1; }
+
+            /* Offres — mobile */
+            .offres-grid { grid-template-columns: 1fr; }
+
+            /* Hero — mobile */
+            .hero-ctas { flex-direction: column; }
+            .hero-argument { font-size: 0.82rem; }
+
+            /* Manifeste — mobile */
+            .manifeste-photo-wrap { aspect-ratio: 4/3; }
+
+            /* Contact cal — mobile */
+            .contact-cal iframe { height: 380px; }
+
+            /* Footer */
+            .footer-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
         }
     </style>
 </head>
