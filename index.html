@@ -6,23 +6,23 @@
     <title>MOOVII — Studio Vidéo & Studio IA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --orange: #FF6A00;
-            --orange-2: #FF8C42;
-            --orange-dim: rgba(255, 106, 0, 0.1);
+            --orange: #C5A059;
+            --orange-2: #D4B578;
+            --orange-dim: rgba(197, 160, 89, 0.12);
             --ia-color: #FFB020;
             --ia-dim: rgba(255, 176, 32, 0.1);
-            --black: #0D0D0D;
-            --black-2: #141414;
-            --black-3: #1C1C1C;
-            --black-4: #242424;
+            --black: #0A0A0A;
+            --black-2: #111111;
+            --black-3: #171717;
+            --black-4: #1F1F1F;
             --white: #FFFFFF;
-            --gray: #909090;
+            --gray: #A3A3A3;
             --gray-2: #D0D0D0;
-            --border: rgba(255,255,255,0.11);
-            --border-o: rgba(255,106,0,0.3);
+            --border: rgba(255,255,255,0.10);
+            --border-o: rgba(197,160,89,0.3);
             --border-ia: rgba(255,176,32,0.3);
         }
         *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -30,9 +30,16 @@
         body {
             background: var(--black);
             color: var(--white);
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, .section-title, .hero-headline, .contact-heading,
+        .offre-title, .process-col-title, .proj-title {
+            font-family: 'Noto Serif', serif;
+            letter-spacing: -0.02em;
         }
 
         /* ── NAVBAR ── */
@@ -76,8 +83,8 @@
         .eyebrow.ia { color: var(--ia-color); }
         .eyebrow.white { color: var(--gray-2); }
         .section-title {
-            font-size: clamp(2.2rem, 3.8vw, 4rem);
-            font-weight:800; line-height:1.05; letter-spacing:-0.025em;
+            font-size: clamp(2.2rem, 3.8vw, 2.5rem);
+            font-weight:700; line-height:1.1; letter-spacing:-0.02em;
         }
         .dot-o { color: var(--orange); }
         .dot-ia { color: var(--ia-color); }
@@ -172,8 +179,8 @@
             display: flex; gap:0.75rem; margin-bottom:2.5rem;
         }
         .hero-headline {
-            font-size: clamp(3rem, 5.5vw, 7rem);
-            font-weight:900; line-height:0.95; letter-spacing:-0.04em;
+            font-size: clamp(3rem, 5.5vw, 4rem);
+            font-weight:700; line-height:1.05; letter-spacing:-0.03em;
             max-width: 780px;
             margin-bottom: 2rem;
         }
@@ -775,7 +782,7 @@
             100% { background-position:  200% center; }
         }
         .hero-headline .grad {
-            background: linear-gradient(120deg, #FF6A00 0%, #FF9040 30%, #FFE0B0 50%, #FF9040 70%, #FFB870 100%);
+            background: linear-gradient(120deg, #C5A059 0%, #D4B578 30%, #FDE68A 50%, #D4B578 70%, #C5A059 100%);
             background-size: 200% auto;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             animation: grad-sweep 4s linear infinite;
@@ -800,6 +807,20 @@
 
         /* ── NAV active indicator ── */
         .nav-links a.nav-active { color: var(--white) !important; }
+
+        /* ── DA OVERRIDE — Sharp Frame ── */
+        .proj-card, .proj-inner,
+        .process-col, .offre-card,
+        .milestone, .contact-link,
+        .bio-portrait, .pricing-cell,
+        .hero-argument, .manifeste-photo-wrap,
+        .contact-cal iframe { border-radius: 4px !important; }
+
+        .studio-pill, .nav-cta,
+        .btn-primary, .btn-secondary, .btn-outline,
+        .offre-cta, .contact-cta,
+        .ia-badge, .proj-tag, .proj-award,
+        .step-num, .offre-check, .c-icon { border-radius: 4px !important; }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 1100px) {
