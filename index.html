@@ -1157,7 +1157,7 @@
     <div class="projects-grid">
 
         <!-- Card A — Large -->
-        <div class="proj-card proj-card-a fade-up">
+        <div class="proj-card proj-card-a fade-up" onclick="openVideo('https://www.youtube.com/embed/lpIpC-BPFgY?autoplay=1')" style="cursor:pointer;">
             <div class="proj-inner">
                 <div class="proj-bg pb-1"></div>
                 <div class="deco-glow" style="top:10%;right:10%;width:120px;height:120px;background:rgba(255,106,0,0.5);"></div>
@@ -1444,6 +1444,14 @@
     </div>
 </section>
 
+<!-- ── VIDEO MODAL ── -->
+<div id="video-modal" style="display:none; position:fixed; inset:0; z-index:9100; background:rgba(0,0,0,0.95); backdrop-filter:blur(16px); align-items:center; justify-content:center;">
+    <span onclick="closeVideo()" style="position:absolute;top:1.5rem;right:2rem;font-size:2rem;color:rgba(255,255,255,0.5);cursor:pointer;line-height:1;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">✕</span>
+    <div style="width:90vw;max-width:1000px;aspect-ratio:16/9;">
+        <iframe id="video-iframe" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="border-radius:8px;"></iframe>
+    </div>
+</div>
+
 <!-- ── LIGHTBOX ── -->
 <div id="lightbox">
     <span class="lb-close" onclick="closeLightbox()">✕</span>
@@ -1524,6 +1532,24 @@
         }, { threshold: 0.5 });
         bioObs.observe(bioNum);
     }
+
+    // ── Video modal
+    const videoModal = document.getElementById('video-modal');
+    const videoIframe = document.getElementById('video-iframe');
+    function openVideo(url) {
+        videoIframe.src = url;
+        videoModal.style.display = 'flex';
+    }
+    function closeVideo() {
+        videoIframe.src = '';
+        videoModal.style.display = 'none';
+    }
+    videoModal.addEventListener('click', function(e) {
+        if (e.target === this) closeVideo();
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeVideo();
+    });
 
     // ── Lightbox Raffinata
     const raffinataPhotos = ['short1.png','short2.png','short3.png','short4.png','short5.png','short6.png'];
